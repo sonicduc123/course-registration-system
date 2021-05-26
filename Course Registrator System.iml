@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/hibernate-core-5.4.31.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/postgresql-42.2.20.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/postgresql-42.2.20.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/hibernate-core-5.4.11.Final.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/javax.persistence-api-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
