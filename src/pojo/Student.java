@@ -5,19 +5,19 @@ public class Student implements java.io.Serializable {
     private String username;
     private String password;
     private String name;
-    private int affairID;
+    private int studentID;
     private String email;
-    private String phoneNumber;
+    private String phone;
 
     public Student() {}
-    public Student(int id, String username, String password, String name, int affairID, String email, String phoneNumber) {
+    public Student(int id, String username, String password, String name, int studentID, String email, String phone) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
-        this.affairID = affairID;
+        this.studentID = studentID;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
     }
 
     public int getId() {
@@ -52,14 +52,6 @@ public class Student implements java.io.Serializable {
         this.name = name;
     }
 
-    public int getAffairID() {
-        return affairID;
-    }
-
-    public void setAffairID(int affairID) {
-        this.affairID = affairID;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -68,11 +60,19 @@ public class Student implements java.io.Serializable {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getStudentID() {
+        return studentID;
+    }
+
+    public void setStudentID(int studentID) {
+        this.studentID = studentID;
     }
 }

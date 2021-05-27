@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate
-Mapping DTD 3.0//EN"
-        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class catalog="course-registration-system"
-        name="pojo.Student" table="students">
+    <class catalog="course-registration-system" name="pojo.Student" table="students">
         <id name="id" type="int">
             <column name="id"/>
             <generator class="identity"/>
@@ -18,14 +17,14 @@ Mapping DTD 3.0//EN"
         <property name="name" type="string">
             <column name="name" length="30"/>
         </property>
-        <property name="studentid" type="int">
-            <column name="name"/>
+        <property name="studentID" type="int">
+            <column name="student_id"/>
         </property>
         <property name="email" type="string">
             <column name="email" length="50"/>
         </property>
-        <property name="phoneNumber" type="string">
-            <column name="phoneNumber" length="15"/>
+        <property name="phone" type="string">
+            <column name="phone" length="15"/>
         </property>
     </class>
 </hibernate-mapping>
