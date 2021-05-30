@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class catalog="course-registration-system" name="pojo.Student" table="students">
+    <class catalog="course-registration-system" name="pojo.Affair" table="affairs">
         <id name="id" type="int">
             <column name="id"/>
             <generator class="identity"/>
@@ -17,14 +17,17 @@
         <property name="name" type="string">
             <column name="name" length="30"/>
         </property>
-        <property name="studentID" type="int">
-            <column name="student_id"/>
+        <property name="affairID" type="int">
+            <column name="affair_id"/>
         </property>
         <property name="email" type="string">
             <column name="email" length="50"/>
         </property>
         <property name="phone" type="string">
             <column name="phone" length="15"/>
+        </property>
+        <property name="birthday" type="date">
+            <column name="birthday"/>
         </property>
     </class>
 </hibernate-mapping>

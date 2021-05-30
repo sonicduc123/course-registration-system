@@ -1,23 +1,29 @@
 package pojo;
 
-public class Student implements java.io.Serializable {
+import java.util.Date;
+
+public class User implements java.io.Serializable {
     private int id;
     private String username;
     private String password;
     private String name;
-    private int studentID;
+    private String userID;
     private String email;
     private String phone;
+    private Date birthday;
+    private String type;
 
-    public Student() {}
-    public Student(int id, String username, String password, String name, int studentID, String email, String phone) {
+    public User() {}
+    public User(int id, String username, String password, String name, String userID, String email, String phone, Date birthday, String type) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
-        this.studentID = studentID;
+        this.userID = userID;
         this.email = email;
         this.phone = phone;
+        this.birthday = birthday;
+        this.type = type;
     }
 
     public int getId() {
@@ -68,11 +74,27 @@ public class Student implements java.io.Serializable {
         this.phone = phone;
     }
 
-    public int getStudentID() {
-        return studentID;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setStudentID(int studentID) {
-        this.studentID = studentID;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

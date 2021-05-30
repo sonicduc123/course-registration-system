@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="course-registration-system" name="pojo.User" table="user">
+        <id name="id" type="int">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="username" type="string">
+            <column name="username" length="15"/>
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="15"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="30"/>
+        </property>
+        <property name="userID" type="string">
+            <column name="user_id" length="10"/>
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="50"/>
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="15"/>
+        </property>
+        <property name="birthday" type="date">
+            <column name="birthday"/>
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="7"/>
+        </property>
+    </class>
+</hibernate-mapping>

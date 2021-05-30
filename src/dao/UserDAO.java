@@ -3,17 +3,16 @@ package dao;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import pojo.Student;
+import pojo.User;
 import util.HibernateUtil;
 import java.util.List;
 
-public class StudentDAO {
-    public static List<Student> getListStudent() {
-        List<Student> list = null;
-
+public class UserDAO {
+    public static List<User> getListUser() {
+        List<User> list = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            String hql = "select s from Student s";
-            Session session = HibernateUtil.getSessionFactory().openSession();
+            String hql = "select s from User s";
             Query query = session.createQuery(hql);
             list = query.list();
         } catch (HibernateException ex) {
