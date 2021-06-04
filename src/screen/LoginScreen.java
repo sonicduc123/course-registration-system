@@ -1,9 +1,17 @@
 package screen;
 
+import dao.UserDAO;
+import pojo.User;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-public class LoginScreen {
+public class LoginScreen implements ActionListener {
+    private List<User> list;
+
     private JFrame frame;
     private JPanel usernamePanel = new JPanel();
     private JPanel passwordPanel = new JPanel();
@@ -30,6 +38,7 @@ public class LoginScreen {
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginPanel.add(loginButton);
         pane.add(loginPanel);
+        loginButton.addActionListener(this);
     }
 
     private void addInput(String labelValue) {
@@ -51,22 +60,44 @@ public class LoginScreen {
     private void createAndShowGUI() {
         //create and set up the window
         frame = new JFrame("Course Registration System");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         //set up the content pane
         addComponentsToPane();
 
         //display the window
-        frame.setSize(500, 500);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setMinimumSize(new Dimension((int)screenDimension.getWidth()/2, (int)screenDimension.getHeight()/2));
         frame.setVisible(true);
     }
 
     public void Run() {
+        list = UserDAO.getListUser();
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 createAndShowGUI();
             }
         });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String username = usernameTextField.getText();
+        String password = String.valueOf(passwordField.getPassword());
+        boolean isExist = false;
+        for(User u: list) {
+            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
+                isExist = true;
+                HomeScreen homeScreen = new HomeScreen();
+                homeScreen.Run();
+                frame.dispose();
+            }
+        }
+        if (!isExist) {
+            JOptionPane.showMessageDialog(frame, "Login false", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

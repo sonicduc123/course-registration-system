@@ -25,7 +25,6 @@ public class User implements java.io.Serializable {
         this.birthday = birthday;
         this.type = type;
     }
-
     public int getId() {
         return id;
     }
