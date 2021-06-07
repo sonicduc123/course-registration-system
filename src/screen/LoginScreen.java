@@ -1,6 +1,7 @@
 package screen;
 
 import dao.UserDAO;
+import org.jboss.jandex.Main;
 import pojo.User;
 
 import javax.swing.*;
@@ -10,40 +11,35 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class LoginScreen implements ActionListener {
-    private List<User> list;
-
     private JFrame frame;
-    private JPanel usernamePanel = new JPanel();
-    private JPanel passwordPanel = new JPanel();
-    private JPanel loginPanel = new JPanel();
+    private JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+    private JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 33, 20));
     private Container pane;
 
     private JLabel usernameLabel;
     private JTextField usernameTextField;
     private JLabel passwordLabel;
     private JPasswordField passwordField;
-    private JButton loginButton;
+    private JButton btnLogin;
 
     public void addComponentsToPane() {
         pane = frame.getContentPane();
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
+        pane.add(Box.createVerticalGlue());
+
         addInput("Username");
         addPassword("Password");
-        addAButton("Login");
-    }
+        btnLogin = Function.AddAButton("Login", pane);
+        btnLogin.addActionListener(this);
 
-    private void addAButton(String text) {
-        loginButton = new JButton(text);
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginPanel.add(loginButton);
-        pane.add(loginPanel);
-        loginButton.addActionListener(this);
+        pane.add(Box.createVerticalGlue());
     }
 
     private void addInput(String labelValue) {
         usernameLabel = new JLabel(labelValue);
         usernameTextField = new JTextField("", 15);
+        usernamePanel.setMaximumSize(new Dimension(400, 0));
         usernamePanel.add(usernameLabel);
         usernamePanel.add(usernameTextField);
         pane.add(usernamePanel);
@@ -52,6 +48,9 @@ public class LoginScreen implements ActionListener {
     private void addPassword(String labelValue) {
         passwordLabel = new JLabel(labelValue);
         passwordField = new JPasswordField("", 15);
+        passwordField.addActionListener(this);
+
+        passwordPanel.setMaximumSize(new Dimension(400, 0));
         passwordPanel.add(passwordLabel);
         passwordPanel.add(passwordField);
         pane.add(passwordPanel);
@@ -60,7 +59,7 @@ public class LoginScreen implements ActionListener {
     private void createAndShowGUI() {
         //create and set up the window
         frame = new JFrame("Course Registration System");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //set up the content pane
         addComponentsToPane();
@@ -73,14 +72,7 @@ public class LoginScreen implements ActionListener {
     }
 
     public void Run() {
-        list = UserDAO.getListUser();
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        javax.swing.SwingUtilities.invokeLater(this::createAndShowGUI);
     }
 
     @Override
@@ -88,10 +80,10 @@ public class LoginScreen implements ActionListener {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
         boolean isExist = false;
-        for(User u: list) {
+        for(User u: AffairHomeScreen.list) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
                 isExist = true;
-                HomeScreen homeScreen = new HomeScreen();
+                AffairHomeScreen homeScreen = new AffairHomeScreen();
                 homeScreen.Run();
                 frame.dispose();
             }
