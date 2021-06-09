@@ -13,7 +13,8 @@
         </property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">anhduc123</property>
-        <mapping resource="pojo/User.hbm.xml"/>
         <!-- Mapping resource -->
+        <mapping resource="pojo/User.hbm.xml"/>
+        <mapping resource="pojo/RegistrationSession.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,5 +1,6 @@
 package screen;
 
+import dao.RegistrationSessionDAO;
 import dao.UserDAO;
 import org.jboss.jandex.Main;
 import pojo.User;
@@ -72,6 +73,7 @@ public class LoginScreen implements ActionListener {
     }
 
     public void Run() {
+        DataUtil.listUser = UserDAO.getListUser();
         javax.swing.SwingUtilities.invokeLater(this::createAndShowGUI);
     }
 
@@ -80,7 +82,7 @@ public class LoginScreen implements ActionListener {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
         boolean isExist = false;
-        for(User u: AffairHomeScreen.list) {
+        for(User u: DataUtil.listUser) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
                 isExist = true;
                 AffairHomeScreen homeScreen = new AffairHomeScreen();

@@ -1,15 +1,14 @@
 package screen;
 
+import pojo.RegistrationSession;
 import pojo.User;
 
 import javax.swing.*;
+import javax.swing.plaf.SplitPaneUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class AffairHomeScreen {
-    public static List<User> list;
     private JFrame frame;
     private JPanel panelRight = new JPanel();
     private JPanel cards = new JPanel(new CardLayout());
@@ -20,27 +19,27 @@ public class AffairHomeScreen {
 
         panelLeft = new JPanel(new GridLayout(8,1));
 
-        CourseSessionScreen courseSessionScreen = new CourseSessionScreen();
+        RegistrationSessionScreen courseSessionScreen = new RegistrationSessionScreen();
         panelRight = courseSessionScreen.CreateScreen();
         cards.add(panelRight, "card");
-        cards.setBorder(BorderFactory.createLineBorder(Color.black));
 
-        JButton btnListAffair = AddAButton("Danh sách Giáo vụ", panelLeft);
-        JButton btnListAffair1 = AddAButton("Danh sách Môn học", panelLeft);
-        JButton btnListAffair2 = AddAButton("Danh sách Học kỳ", panelLeft);
-        JButton btnListAffair3 = AddAButton("Danh sách Lớp học", panelLeft);
+        JButton btnListAffair = Function.AddAButton("Danh sách Giáo vụ", panelLeft);
+        JButton btnListAffair1 = Function.AddAButton("Danh sách Môn học", panelLeft);
+        JButton btnListAffair2 = Function.AddAButton("Danh sách Học kỳ", panelLeft);
+        JButton btnListAffair3 = Function.AddAButton("Danh sách Lớp học", panelLeft);
 
-        JButton btnListCourseSession = AddAButton("Danh sách Kỳ đăng ký học phần", panelLeft);
+        JButton btnListCourseSession = Function.AddAButton("Danh sách Kỳ đăng ký học phần", panelLeft);
         btnListCourseSession.addActionListener(e -> {
+            btnListCourseSession.setBackground(Color.cyan);
             CardLayout cl = (CardLayout)(cards.getLayout());
             cl.show(cards, "card");
         });
 
-        JButton btnListAffair5 = AddAButton("Quản lý tài khoản", panelLeft);
+        JButton btnListAffair5 = Function.AddAButton("Quản lý tài khoản", panelLeft);
 
         panelLeft.add(new JLabel());
 
-        JButton btnLogout = AddAButton("Đăng xuất", panelLeft);
+        JButton btnLogout = Function.AddAButton("Đăng xuất", panelLeft);
         btnLogout.addActionListener(e -> {
             frame.dispose();
             LoginScreen loginScreen = new LoginScreen();
@@ -48,16 +47,10 @@ public class AffairHomeScreen {
         });
 
         panelLeft.setPreferredSize(new Dimension(250, 900));
-        pane.add(panelLeft, BorderLayout.LINE_START);
+        cards.setPreferredSize(new Dimension(1000, 900));
 
-        pane.add(cards, BorderLayout.CENTER);
-    }
-
-    public JButton AddAButton(String buttonName, Container pane) {
-        JButton button = new JButton(buttonName);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pane.add(button);
-        return button;
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelLeft, cards);
+        pane.add(splitPane, BorderLayout.CENTER);
     }
 
     private void CreateAndShowGUI () {

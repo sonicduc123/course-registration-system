@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="course-registration-system" name="pojo.RegistrationSession" table="session">
+        <composite-id name="id" class="pojo.IDSession">
+            <key-property name="session" column="session" length="3" type="string"/>
+            <key-property name="year" column="year" length="9" type="string"/>
+        </composite-id>
+        <property name="start" type="date">
+            <column name="start"/>
+        </property>
+        <property name="finish" type="date">
+            <column name="finish"/>
+        </property>
+    </class>
+</hibernate-mapping>
