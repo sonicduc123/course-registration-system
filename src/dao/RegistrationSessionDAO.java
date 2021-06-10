@@ -78,7 +78,7 @@ public class RegistrationSessionDAO {
         } finally {
             session.close();
         }
-        System.out.println("Add session success");
+        System.out.println("Delete session success");
         return true;
     }
 }

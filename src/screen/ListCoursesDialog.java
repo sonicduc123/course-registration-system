@@ -6,83 +6,86 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 import pojo.IDSession;
 import pojo.RegistrationSession;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-public class RegistrationSessionScreen {
-    JPanel panel = new JPanel(new BorderLayout());
-    JTable table = new JTable();
-    JScrollPane scrollPane = new JScrollPane(table);
-    RegistrationSessionModelTable tableModel = new RegistrationSessionModelTable(table);
+public class ListCoursesDialog {
+    private JDialog dialog;
+    private JTable table;
+    private ListCoursesModelTable tableModel;
+    private JScrollPane scrollPane;
 
-    public JPanel CreateScreen() {
-        DataUtil.listRegistrationSession = RegistrationSessionDAO.GetList();
+    public ListCoursesDialog() {
+        dialog = new JDialog();
+        table = new JTable();
+        scrollPane = new JScrollPane(table);
+        tableModel = new ListCoursesModelTable(this.table);
+    }
+
+    public void CreateScreen () {
+        dialog.setTitle("List courses");
+        dialog.setLayout(new BorderLayout());
+        Container container = dialog.getContentPane();
         JPanel panelHeader = new JPanel();
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.Y_AXIS));
-        JLabel label = new JLabel("List course registration session");
+        JLabel label = new JLabel("List courses");
         label.setFont(new Font("Serif", Font.PLAIN, 20));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelHeader.add(label);
         panelHeader.add(Box.createVerticalStrut(30));
-        panel.add(panelHeader, BorderLayout.PAGE_START);
+        container.add(panelHeader, BorderLayout.PAGE_START);
         // Contain button and table
         JPanel panelBody = new JPanel();
         panelBody.setLayout(new BoxLayout(panelBody, BoxLayout.Y_AXIS));
         // Button to create new course registration session
-        JButton buttonCreate = new JButton("Add a new course registration session");
+        JButton buttonCreate = new JButton("Add a new course");
         buttonCreate.setAlignmentX(Component.RIGHT_ALIGNMENT);
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CreateANewRegistrationSession();
+                CreateANewCourse();
             }
         });
         panelBody.add(buttonCreate);
         panelBody.add(Box.createVerticalStrut(30));
 
         // Button to edit table
-//        JButton buttonEdit = new JButton("Edit");
-//        buttonEdit.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        buttonEdit.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                tableModel.setEditable(true);
-//            }
-//        });
-//        panelBody.add(buttonEdit);
-//        panelBody.add(Box.createVerticalStrut(30));
+        JButton buttonEdit = new JButton("Edit");
+        buttonEdit.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        buttonEdit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.setEditable(true);
+            }
+        });
+        panelBody.add(buttonEdit);
+        panelBody.add(Box.createVerticalStrut(30));
 
         // add table to pane
         tableModel.setEditable(false);
         table.setModel(tableModel);
         table.setFillsViewportHeight(true);
-        table.setRowHeight(30);
-
-        table.getColumn("List courses").setCellRenderer(new PanelCell());
-        table.getColumn("List courses").setCellEditor(new PanelCell());
         table.getColumn("").setCellRenderer(new PanelCell());
         table.getColumn("").setCellEditor(new PanelCell());
+        table.setRowHeight(30);
         panelBody.add(scrollPane);
-        panel.add(panelBody, BorderLayout.CENTER);
-        panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
-        panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
-        return panel;
+        container.add(panelBody, BorderLayout.CENTER);
+
+        // setup dialog
+        dialog.setSize(1000, 600);
+        dialog.setMinimumSize(new Dimension(1000, 600));
+        dialog.setVisible(true);
     }
 
-    // Create a dialog to add a new registration session
-    void CreateANewRegistrationSession() {
+    // Create a dialog to add a new course
+    void CreateANewCourse() {
         JDialog dialog = new JDialog();
-        dialog.setTitle("Add a new course registration session");
+        dialog.setTitle("Add a new course");
         Container container = dialog.getContentPane();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
@@ -134,7 +137,6 @@ public class RegistrationSessionScreen {
         container.add(panelSession);
         container.add(panelStart);
         container.add(panelFinish);
-
         JButton buttonSave = Function.AddAButton("Save", container);
         buttonSave.addActionListener(new ActionListener() {
             @Override
@@ -159,14 +161,13 @@ public class RegistrationSessionScreen {
     }
 }
 
-// custom table model
-// registration session table
-class RegistrationSessionModelTable extends AbstractTableModel {
-    String[] columnName = {"Session", "Year", "Start day", "Finish day", "List courses", ""};
+// list course table
+class ListCoursesModelTable extends AbstractTableModel {
+    String[] columnName = {"Session", "Year", "Start day", "Finish day", "List course", ""};
     private JTable table;
     private boolean isEditable;
 
-    public RegistrationSessionModelTable(JTable table) {
+    public ListCoursesModelTable(JTable table) {
         this.table = table;
     }
 
@@ -187,9 +188,6 @@ class RegistrationSessionModelTable extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex == 4 || columnIndex == 5) {
-            return true;
-        }
         return isEditable;
     }
 
@@ -209,8 +207,7 @@ class RegistrationSessionModelTable extends AbstractTableModel {
                 buttonShowListCourses.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ListCoursesDialog listCoursesDialog = new ListCoursesDialog();
-                        listCoursesDialog.CreateScreen();
+
                     }
                 });
                 panel.add(Box.createHorizontalGlue());
@@ -245,44 +242,21 @@ class RegistrationSessionModelTable extends AbstractTableModel {
         return null;
     }
 
-//    @Override
-//    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-//        super.setValueAt(aValue, rowIndex, columnIndex);
-//        switch (columnIndex) {
-//            case 0 -> {
-//                DataUtil.listRegistrationSession.get(rowIndex).getId().setSession((String)aValue);
-//            }
-//            case 1 -> {
-//                DataUtil.listRegistrationSession.get(rowIndex).getId().setYear((String)aValue);
-//            }
-//
-//        }
-//    }
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        super.setValueAt(aValue, rowIndex, columnIndex);
+        switch (columnIndex) {
+            case 0 -> {
+                DataUtil.listRegistrationSession.get(rowIndex).getId().setSession((String)aValue);
+            }
+            case 1 -> {
+                DataUtil.listRegistrationSession.get(rowIndex).getId().setYear((String)aValue);
+            }
+
+        }
+    }
 
     public void setEditable(boolean editable) {
         isEditable = editable;
     }
-}
-
-// custom date format
-class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-
-    private String datePattern = "dd-MM-yyyy";
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-
-    @Override
-    public Object stringToValue(String text) throws ParseException {
-        return dateFormatter.parseObject(text);
-    }
-
-    @Override
-    public String valueToString(Object value) throws ParseException {
-        if (value != null) {
-            Calendar cal = (Calendar) value;
-            return dateFormatter.format(cal.getTime());
-        }
-
-        return "";
-    }
-
 }

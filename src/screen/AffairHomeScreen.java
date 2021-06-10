@@ -23,23 +23,23 @@ public class AffairHomeScreen {
         panelRight = courseSessionScreen.CreateScreen();
         cards.add(panelRight, "card");
 
-        JButton btnListAffair = Function.AddAButton("Danh sách Giáo vụ", panelLeft);
-        JButton btnListAffair1 = Function.AddAButton("Danh sách Môn học", panelLeft);
-        JButton btnListAffair2 = Function.AddAButton("Danh sách Học kỳ", panelLeft);
-        JButton btnListAffair3 = Function.AddAButton("Danh sách Lớp học", panelLeft);
+        JButton btnListAffair = Function.AddAButton("List affairs", panelLeft);
+        JButton btnListAffair1 = Function.AddAButton("List subjects", panelLeft);
+        JButton btnListAffair2 = Function.AddAButton("List semesters", panelLeft);
+        JButton btnListAffair3 = Function.AddAButton("List classes", panelLeft);
 
-        JButton btnListCourseSession = Function.AddAButton("Danh sách Kỳ đăng ký học phần", panelLeft);
+        JButton btnListCourseSession = Function.AddAButton("List course registration sessions", panelLeft);
         btnListCourseSession.addActionListener(e -> {
             btnListCourseSession.setBackground(Color.cyan);
             CardLayout cl = (CardLayout)(cards.getLayout());
             cl.show(cards, "card");
         });
 
-        JButton btnListAffair5 = Function.AddAButton("Quản lý tài khoản", panelLeft);
+        JButton btnListAffair5 = Function.AddAButton("Account", panelLeft);
 
         panelLeft.add(new JLabel());
 
-        JButton btnLogout = Function.AddAButton("Đăng xuất", panelLeft);
+        JButton btnLogout = Function.AddAButton("Logout", panelLeft);
         btnLogout.addActionListener(e -> {
             frame.dispose();
             LoginScreen loginScreen = new LoginScreen();

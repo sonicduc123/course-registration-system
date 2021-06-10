@@ -5,6 +5,11 @@ import java.util.Objects;
 public class IDSession implements java.io.Serializable {
     private String session;
     private String year;
+    public IDSession() {};
+    public IDSession(String session, String year) {
+        this.session = session;
+        this.year = year;
+    }
 
     @Override
     public boolean equals(Object o) {
