@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="course-registration-system" name="pojo.Course" table="course">
+        <id name="id" type="int">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="title" type="string">
+            <column name="title" length="50"/>
+        </property>
+        <property name="credits" type="int">
+            <column name="credits"/>
+        </property>
+        <many-to-one name="teacher" class="pojo.Teacher" fetch="join" lazy="false" cascade="save-update, delete">
+            <column name="id_teacher"/>
+        </many-to-one>
+        <many-to-one name="classroom" class="pojo.Classroom" fetch="join" lazy="false" cascade="save-update, delete">
+            <column name="id_classroom"/>
+        </many-to-one>
+        <property name="dayweek" type="string">
+            <column name="dayweek" length="9"/>
+        </property>
+        <property name="shift" type="string">
+            <column name="shift" length="13"/>
+        </property>
+        <property name="slot" type="int">
+            <column name="slot"/>
+        </property>
+        <many-to-one name="registrationSession" class="pojo.RegistrationSession" fetch="join" lazy="false">
+            <column name="session"/>
+            <column name="year"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

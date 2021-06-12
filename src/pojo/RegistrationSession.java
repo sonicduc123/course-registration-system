@@ -1,6 +1,7 @@
 package pojo;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class RegistrationSession implements java.io.Serializable {
     private IDSession id;
@@ -36,6 +37,19 @@ public class RegistrationSession implements java.io.Serializable {
 
     public void setId(IDSession id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RegistrationSession)) return false;
+        RegistrationSession that = (RegistrationSession) o;
+        return getId().equals(that.getId()) && Objects.equals(getStart(), that.getStart()) && Objects.equals(getFinish(), that.getFinish());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStart(), getFinish());
     }
 }
 

@@ -8,9 +8,6 @@ import pojo.IDSession;
 import pojo.RegistrationSession;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,11 +23,13 @@ public class RegistrationSessionScreen {
     RegistrationSessionModelTable tableModel = new RegistrationSessionModelTable(table);
 
     public JPanel CreateScreen() {
+        //get data
         DataUtil.listRegistrationSession = RegistrationSessionDAO.GetList();
+
         JPanel panelHeader = new JPanel();
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.Y_AXIS));
         JLabel label = new JLabel("List course registration session");
-        label.setFont(new Font("Serif", Font.PLAIN, 20));
+        label.setFont(new Font("Serif", Font.PLAIN, 30));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelHeader.add(label);
         panelHeader.add(Box.createVerticalStrut(30));
@@ -49,18 +48,6 @@ public class RegistrationSessionScreen {
         });
         panelBody.add(buttonCreate);
         panelBody.add(Box.createVerticalStrut(30));
-
-        // Button to edit table
-//        JButton buttonEdit = new JButton("Edit");
-//        buttonEdit.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        buttonEdit.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                tableModel.setEditable(true);
-//            }
-//        });
-//        panelBody.add(buttonEdit);
-//        panelBody.add(Box.createVerticalStrut(30));
 
         // add table to pane
         tableModel.setEditable(false);
@@ -209,7 +196,7 @@ class RegistrationSessionModelTable extends AbstractTableModel {
                 buttonShowListCourses.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ListCoursesDialog listCoursesDialog = new ListCoursesDialog();
+                        ListCoursesDialog listCoursesDialog = new ListCoursesDialog(DataUtil.listRegistrationSession.get(rowIndex));
                         listCoursesDialog.CreateScreen();
                     }
                 });

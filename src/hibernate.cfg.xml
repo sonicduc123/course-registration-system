@@ -16,5 +16,9 @@
         <!-- Mapping resource -->
         <mapping resource="pojo/User.hbm.xml"/>
         <mapping resource="pojo/RegistrationSession.hbm.xml"/>
+        <mapping resource="pojo/Teacher.hbm.xml"/>
+        <mapping resource="pojo/Classroom.hbm.xml"/>
+        <mapping resource="pojo/Course.hbm.xml"/>
+        <mapping resource="pojo/RegistrationCourse.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

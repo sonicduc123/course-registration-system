@@ -26,7 +26,10 @@ public class LoginScreen implements ActionListener {
     public void addComponentsToPane() {
         pane = frame.getContentPane();
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-
+        JLabel label = new JLabel("Course Registration System");
+        label.setFont(new Font("Serif", Font.PLAIN, 40));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pane.add(label);
         pane.add(Box.createVerticalGlue());
 
         addInput("Username");
@@ -43,6 +46,7 @@ public class LoginScreen implements ActionListener {
         usernamePanel.setMaximumSize(new Dimension(400, 0));
         usernamePanel.add(usernameLabel);
         usernamePanel.add(usernameTextField);
+        usernamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pane.add(usernamePanel);
     }
 
@@ -54,6 +58,7 @@ public class LoginScreen implements ActionListener {
         passwordPanel.setMaximumSize(new Dimension(400, 0));
         passwordPanel.add(passwordLabel);
         passwordPanel.add(passwordField);
+        passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pane.add(passwordPanel);
     }
 
@@ -66,9 +71,8 @@ public class LoginScreen implements ActionListener {
         addComponentsToPane();
 
         //display the window
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setMinimumSize(new Dimension((int)screenDimension.getWidth()/2, (int)screenDimension.getHeight()/2));
+        frame.setMinimumSize(new Dimension((int)screenDimension.getWidth()/2 + 50, (int)screenDimension.getHeight()/2));
         frame.setVisible(true);
     }
 
@@ -84,10 +88,18 @@ public class LoginScreen implements ActionListener {
         boolean isExist = false;
         for(User u: DataUtil.listUser) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
+                DataUtil.user = u;
                 isExist = true;
-                AffairHomeScreen homeScreen = new AffairHomeScreen();
-                homeScreen.Run();
-                frame.dispose();
+                if (u.getType().equals("affair")) {
+                    AffairHomeScreen homeScreen = new AffairHomeScreen();
+                    homeScreen.Run();
+                    frame.dispose();
+                }
+                else {
+                    StudentHomeScreen homeScreen = new StudentHomeScreen();
+                    homeScreen.Run();
+                    frame.dispose();
+                }
             }
         }
         if (!isExist) {

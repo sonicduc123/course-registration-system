@@ -1,11 +1,11 @@
 package screen;
 
-import pojo.RegistrationCourse;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class AffairHomeScreen {
+public class StudentHomeScreen {
     private JFrame frame;
     private JPanel panelRight = new JPanel();
     private JPanel cards = new JPanel(new CardLayout());
@@ -14,26 +14,38 @@ public class AffairHomeScreen {
     public void AddComponentToPane () {
         Container pane = frame.getContentPane();
 
-        panelLeft = new JPanel(new GridLayout(8,1));
+        panelLeft = new JPanel(new GridLayout(7,1));
 
-        RegistrationSessionScreen courseSessionScreen = new RegistrationSessionScreen();
+        StudentRegistrationCourse registrationCourse = new StudentRegistrationCourse();
+        JPanel panelRegistrationCourse = registrationCourse.CreateScreen();
+        cards.add(panelRegistrationCourse, "panel1");
+
+        StudentRegisteredCourse courseSessionScreen = new StudentRegisteredCourse();
         panelRight = courseSessionScreen.CreateScreen();
-        cards.add(panelRight, "card");
+        cards.add(panelRight, "panel2");
 
-        JButton btnListAffair = Function.AddAButton("List affairs", panelLeft);
-        JButton btnListAffair1 = Function.AddAButton("List subjects", panelLeft);
-        JButton btnListAffair2 = Function.AddAButton("List semesters", panelLeft);
-        JButton btnListAffair3 = Function.AddAButton("List classes", panelLeft);
-
-        JButton btnListCourseSession = Function.AddAButton("List course registration sessions", panelLeft);
+        JButton btnRegistrationCourse = Function.AddAButton("Registration Course", panelLeft);
+        JButton btnListCourseSession = Function.AddAButton("Your Courses", panelLeft);
+        Color originColor = btnRegistrationCourse.getBackground();
+        btnRegistrationCourse.setBackground(Color.cyan);
+        btnRegistrationCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnRegistrationCourse.setBackground(Color.cyan);
+                btnListCourseSession.setBackground(originColor);
+                CardLayout cl = (CardLayout)(cards.getLayout());
+                cl.show(cards, "panel1");
+            }
+        });
         btnListCourseSession.addActionListener(e -> {
             btnListCourseSession.setBackground(Color.cyan);
+            btnRegistrationCourse.setBackground(originColor);
             CardLayout cl = (CardLayout)(cards.getLayout());
-            cl.show(cards, "card");
+            cl.show(cards, "panel2");
         });
-
-        JButton btnListAffair5 = Function.AddAButton("Account", panelLeft);
-
+        panelLeft.add(new JLabel());
+        panelLeft.add(new JLabel());
+        panelLeft.add(new JLabel());
         panelLeft.add(new JLabel());
 
         JButton btnLogout = Function.AddAButton("Logout", panelLeft);
@@ -43,7 +55,7 @@ public class AffairHomeScreen {
             loginScreen.Run();
         });
 
-        panelLeft.setPreferredSize(new Dimension(250, 900));
+        panelLeft.setPreferredSize(new Dimension(300, 900));
         cards.setPreferredSize(new Dimension(1000, 900));
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelLeft, cards);
@@ -66,7 +78,7 @@ public class AffairHomeScreen {
     }
 
     public void Run() {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 CreateAndShowGUI();

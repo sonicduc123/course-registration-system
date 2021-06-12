@@ -1,30 +1,46 @@
 package screen;
 
-import dao.RegistrationSessionDAO;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
-import pojo.IDSession;
-import pojo.RegistrationSession;
+import dao.ClassroomDAO;
+import dao.CourseDAO;
+import dao.TeacherDAO;
+import pojo.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
 
 public class ListCoursesDialog {
     private JDialog dialog;
     private JTable table;
     private ListCoursesModelTable tableModel;
     private JScrollPane scrollPane;
+    static RegistrationSession registrationSession;
+    static List<Course> listCourse;
 
-    public ListCoursesDialog() {
+    static void GetListCourse (RegistrationSession registrationSession) {
+        DataUtil.listCourse = CourseDAO.GetList();
+        listCourse = new ArrayList<>();
+        for (Course c: DataUtil.listCourse) {
+            if (c.getRegistrationSession().equals(registrationSession)) {
+                listCourse.add(c);
+            }
+        }
+    }
+
+    public ListCoursesDialog(RegistrationSession registrationSession) {
+        ListCoursesDialog.registrationSession = registrationSession;
         dialog = new JDialog();
         table = new JTable();
         scrollPane = new JScrollPane(table);
         tableModel = new ListCoursesModelTable(this.table);
+        GetListCourse(registrationSession);
+        DataUtil.listTeacher = TeacherDAO.GetList();
+        DataUtil.listClassroom = ClassroomDAO.GetList();
     }
 
     public void CreateScreen () {
@@ -34,7 +50,7 @@ public class ListCoursesDialog {
         JPanel panelHeader = new JPanel();
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.Y_AXIS));
         JLabel label = new JLabel("List courses");
-        label.setFont(new Font("Serif", Font.PLAIN, 20));
+        label.setFont(new Font("Serif", Font.PLAIN, 30));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelHeader.add(label);
         panelHeader.add(Box.createVerticalStrut(30));
@@ -75,8 +91,11 @@ public class ListCoursesDialog {
         table.setRowHeight(30);
         panelBody.add(scrollPane);
         container.add(panelBody, BorderLayout.CENTER);
+        container.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
+        container.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
 
         // setup dialog
+        dialog.setModal(true);
         dialog.setSize(1000, 600);
         dialog.setMinimumSize(new Dimension(1000, 600));
         dialog.setVisible(true);
@@ -86,84 +105,107 @@ public class ListCoursesDialog {
     void CreateANewCourse() {
         JDialog dialog = new JDialog();
         dialog.setTitle("Add a new course");
-        Container container = dialog.getContentPane();
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        Container pane = dialog.getContentPane();
+        pane.setLayout(new BorderLayout());
 
-        JPanel panelYear = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JLabel labelYear = new JLabel("Year: ");
-        panelYear.add(labelYear);
-        panelYear.add(Box.createHorizontalStrut(55));
-        String[] year = {"2020-2021", "2021-2022"};
-        JComboBox listYear = new JComboBox(year);
-        panelYear.add(listYear);
-        panelYear.setAlignmentY(Component.CENTER_ALIGNMENT);
-        panelYear.setMaximumSize(new Dimension(400, 50));
+        JPanel container = new JPanel(new GridLayout(7, 1, 0, 10));
 
-        JPanel panelSession = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JLabel labelSession = new JLabel("Session: ");
-        panelSession.add(labelSession);
-        panelSession.add(Box.createHorizontalStrut(35));
-        String[] session = {"HK1", "HK2", "HK3"};
-        JComboBox listSession = new JComboBox(session);
-        panelSession.add(listSession);
-        panelSession.setMaximumSize(new Dimension(400, 50));
+        JLabel labelTitle = new JLabel("Title: ");
+        container.add(labelTitle);
+        JTextField title = new JTextField("", 15);
+        container.add(title);
 
-        JPanel panelStart = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JLabel labelStart = new JLabel("Start day: ");
-        panelStart.add(labelStart);
-        panelStart.add(Box.createHorizontalStrut(30));
-        UtilDateModel modelStart = new UtilDateModel();
-        modelStart.setSelected(true);
-        JDatePanelImpl panelDateStart = new JDatePanelImpl(modelStart);
-        JDatePickerImpl datePickerStart = new JDatePickerImpl(panelDateStart, new DateLabelFormatter());
-        panelStart.add(datePickerStart);
-        panelStart.setMaximumSize(new Dimension(400, 50));
+        JLabel labelCredits = new JLabel("Credits: ");
+        container.add(labelCredits);
+        JTextField credits = new JTextField("", 15);
+        container.add(credits);
 
-        JPanel panelFinish = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        JLabel labelFinish = new JLabel("Finish day: ");
-        panelFinish.add(labelFinish);
-        panelFinish.add(Box.createHorizontalStrut(23));
-        UtilDateModel modelFinish = new UtilDateModel();
-        modelFinish.setSelected(true);
-        JDatePanelImpl panelDateFinish = new JDatePanelImpl(modelFinish);
-        JDatePickerImpl datePickerFinish = new JDatePickerImpl(panelDateFinish, new DateLabelFormatter());
-        panelFinish.add(datePickerFinish);
-        panelFinish.setMaximumSize(new Dimension(400, 50));
+        JLabel labelTeacher = new JLabel("Teacher: ");
+        container.add(labelTeacher);
+        String[] teacherName = new String[DataUtil.listTeacher.size()];
+        for (int i = 0; i < DataUtil.listTeacher.size(); i++) {
+            teacherName[i] = DataUtil.listTeacher.get(i).getName();
+        }
+        JComboBox listTeacherName = new JComboBox(teacherName);
+        container.add(listTeacherName);
 
-        //Date selectedDate = (Date) datePicker.getModel().getValue();
+        JLabel labelClassroom = new JLabel("Classroom: ");
+        container.add(labelClassroom);
+        String[] classroomName = new String[DataUtil.listClassroom.size()];
+        for (int i = 0; i < DataUtil.listClassroom.size(); i++) {
+            classroomName[i] = DataUtil.listClassroom.get(i).getName();
+        }
+        JComboBox listClassroom = new JComboBox(classroomName);
+        container.add(listClassroom);
 
-        container.add(Box.createVerticalStrut(10));
-        container.add(panelYear);
-        container.add(panelSession);
-        container.add(panelStart);
-        container.add(panelFinish);
-        JButton buttonSave = Function.AddAButton("Save", container);
+        JLabel labelDayweek = new JLabel("Days Of Week: ");
+        container.add(labelDayweek);
+        String[] dayweek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        JComboBox listDayweek = new JComboBox(dayweek);
+        container.add(listDayweek);
+
+        JLabel labelShift = new JLabel("Shift: ");
+        container.add(labelShift);
+        String[] shift = {"7:30 – 9:30", "9:30 – 11:30", "13:30 – 15:30", "15:30 – 17:30"};
+        JComboBox listShift = new JComboBox(shift);
+        container.add(listShift);
+
+        JLabel labelSlot = new JLabel("Slot: ");
+        container.add(labelSlot);
+        JTextField slot = new JTextField("", 15);
+        container.add(slot);
+
+        JPanel panelSave = new JPanel();
+        JButton buttonSave = Function.AddAButton("Save", panelSave);
         buttonSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegistrationSession registrationSession = new RegistrationSession();
-                IDSession idSession = new IDSession();
-                idSession.setYear((String) listYear.getSelectedItem());
-                idSession.setSession((String) listSession.getSelectedItem());
-                registrationSession.setId(idSession);
-                registrationSession.setStart((Date) datePickerStart.getModel().getValue());
-                registrationSession.setFinish((Date) datePickerFinish.getModel().getValue());
-                RegistrationSessionDAO.Add(registrationSession);
-                DataUtil.listRegistrationSession = RegistrationSessionDAO.GetList();
+                Course course = new Course();
+                course.setTitle(title.getText());
+                course.setCredits(Integer.parseInt(credits.getText()));
+                Teacher teacher = new Teacher();
+                for (int i = 0; i < teacherName.length; i++) {
+                    if (teacherName[i].equals((String)listTeacherName.getSelectedItem())) {
+                        teacher.setId(i);
+                        teacher.setName(teacherName[i]);
+                    }
+                }
+                course.setTeacher(teacher);
+                Classroom classroom = new Classroom();
+                for (int i = 0; i < classroomName.length; i++) {
+                    if (classroomName[i].equals((String)listClassroom.getSelectedItem())) {
+                        classroom.setId(i);
+                        classroom.setName(classroomName[i]);
+                    }
+                }
+                course.setClassroom(classroom);
+                course.setDayweek((String)listDayweek.getSelectedItem());
+                course.setShift((String)listShift.getSelectedItem());
+                course.setSlot(Integer.parseInt(slot.getText()));
+                course.setRegistrationSession(registrationSession);
+                CourseDAO.Add(course);
+                GetListCourse(registrationSession);
                 table.repaint();
                 dialog.dispose();
             }
         });
+
+        pane.add(Box.createVerticalStrut(20), BorderLayout.PAGE_START);
+        pane.add(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
+        pane.add(container, BorderLayout.CENTER);
+        pane.add(Box.createHorizontalStrut(30), BorderLayout.LINE_END);
+        pane.add(panelSave, BorderLayout.PAGE_END);
+
         dialog.setModal(true);
-        dialog.setSize(500, 300);
-        dialog.setMinimumSize(new Dimension(500, 300));
+        dialog.setSize(500, 400);
+        dialog.setMinimumSize(new Dimension(500, 400));
         dialog.setVisible(true);
     }
 }
 
 // list course table
 class ListCoursesModelTable extends AbstractTableModel {
-    String[] columnName = {"Session", "Year", "Start day", "Finish day", "List course", ""};
+    String[] columnName = {"CourseID", "Title", "Credits", "Teacher", "Classroom", "Day Of Week", "Shift", "Slot", ""};
     private JTable table;
     private boolean isEditable;
 
@@ -173,7 +215,7 @@ class ListCoursesModelTable extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return DataUtil.listRegistrationSession.size();
+        return ListCoursesDialog.listCourse.size();
     }
 
     @Override
@@ -188,34 +230,41 @@ class ListCoursesModelTable extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+        if (columnIndex == 8)
+            return true;
         return isEditable;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
-            case 0 -> { return DataUtil.listRegistrationSession.get(rowIndex).getId().getSession(); }
-            case 1 -> { return DataUtil.listRegistrationSession.get(rowIndex).getId().getYear(); }
-            case 2 -> { return DataUtil.listRegistrationSession.get(rowIndex).getStart(); }
-            case 3 -> { return DataUtil.listRegistrationSession.get(rowIndex).getFinish(); }
-            case 4 -> {
-                JPanel panel = new JPanel();
-                panel.setBackground(Color.white);
-                panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
-                JButton buttonShowListCourses = new JButton("Show");
-                buttonShowListCourses.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-
-                    }
-                });
-                panel.add(Box.createHorizontalGlue());
-                panel.add(buttonShowListCourses);
-                panel.add(Box.createHorizontalGlue());
-                return panel;
-            }
-            case 5 -> {
+            case 0 -> { return DataUtil.listCourse.get(rowIndex).getId(); }
+            case 1 -> { return DataUtil.listCourse.get(rowIndex).getTitle(); }
+            case 2 -> { return DataUtil.listCourse.get(rowIndex).getCredits(); }
+            case 3 -> { return DataUtil.listCourse.get(rowIndex).getTeacher().getName(); }
+            case 4 -> { return DataUtil.listCourse.get(rowIndex).getClassroom().getName(); }
+            case 5 -> { return DataUtil.listCourse.get(rowIndex).getDayweek(); }
+            case 6 -> { return DataUtil.listCourse.get(rowIndex).getShift(); }
+            case 7 -> { return DataUtil.listCourse.get(rowIndex).getSlot(); }
+//          btn Show
+//                JPanel panel = new JPanel();
+//                panel.setBackground(Color.white);
+//                panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+//
+//                JButton buttonShowListCourses = new JButton("Show");
+//                buttonShowListCourses.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//
+//                    }
+//                });
+//                panel.add(Box.createHorizontalGlue());
+//                panel.add(buttonShowListCourses);
+//                panel.add(Box.createHorizontalGlue());
+//                return panel;
+//            }
+            case 8 -> {
+                // button delete
                 JPanel panel = new JPanel();
                 panel.setBackground(Color.white);
                 panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -224,11 +273,8 @@ class ListCoursesModelTable extends AbstractTableModel {
                 buttonDelete.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String session = (String) getValueAt(rowIndex, 0);
-                        String year = (String) getValueAt(rowIndex, 1);
-                        IDSession idSession = new IDSession(session, year);
-                        RegistrationSessionDAO.Delete(idSession);
-                        DataUtil.listRegistrationSession = RegistrationSessionDAO.GetList();
+                        CourseDAO.Delete((int)getValueAt(rowIndex, 0));
+                        ListCoursesDialog.GetListCourse(ListCoursesDialog.registrationSession);
                         buttonDelete.setVisible(false);
                         table.repaint();
                     }
@@ -242,19 +288,19 @@ class ListCoursesModelTable extends AbstractTableModel {
         return null;
     }
 
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        super.setValueAt(aValue, rowIndex, columnIndex);
-        switch (columnIndex) {
-            case 0 -> {
-                DataUtil.listRegistrationSession.get(rowIndex).getId().setSession((String)aValue);
-            }
-            case 1 -> {
-                DataUtil.listRegistrationSession.get(rowIndex).getId().setYear((String)aValue);
-            }
-
-        }
-    }
+//    @Override
+//    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+//        super.setValueAt(aValue, rowIndex, columnIndex);
+//        switch (columnIndex) {
+//            case 0 -> {
+//                DataUtil.listRegistrationSession.get(rowIndex).getId().setSession((String)aValue);
+//            }
+//            case 1 -> {
+//                DataUtil.listRegistrationSession.get(rowIndex).getId().setYear((String)aValue);
+//            }
+//
+//        }
+//    }
 
     public void setEditable(boolean editable) {
         isEditable = editable;

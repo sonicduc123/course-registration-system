@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="course-registration-system" name="pojo.RegistrationCourse" table="registration_course">
+        <composite-id name="id" class="pojo.IDRegistrationCourse">
+            <key-property name="id_course" column="id_course" type="int"/>
+            <key-property name="id_student" column="id_student" type="int"/>
+        </composite-id>
+        <property name="time_registration" type="date">
+            <column name="time_registration"/>
+        </property>
+    </class>
+</hibernate-mapping>
